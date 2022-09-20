@@ -1,8 +1,10 @@
-#ifdef STRING_UTILS_H
+#ifndef STRING_UTILS_H
 #define STRING_UTILS_H
+// Header Files
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
 // GLOBAL CONSTANTS - may be used in other files
 typedef enum { False, True } Boolean;
 
@@ -33,7 +35,11 @@ typedef struct OpCodeType
 
 } OpCodeType;
 
-typdef enum { NO_ERR, INCOMPLETE_FILE_ERR,INPUT_BUFFER_OVERRUN_ERR,NON_PRINTABLE_CHAR} StringManipCode;
+typedef enum { NO_ERR,
+ 			  INCOMPLETE_FILE_ERR,
+ 			  INPUT_BUFFER_OVERRUN_ERR,
+ 			  NON_PRINTABLE_CHAR
+ } StringManipCode;
 
 // Constant declaration
 extern const char NULL_CHAR;
@@ -53,7 +59,7 @@ extern const Boolean ACCEPT_LEADING_WS;
 
 //Function prototypes
 int compareString(const char* OneStr, const char* OtherStr);
-int find_length(const char* s);
+//int find_length(const char* s);
 int max_length(const char* OneStr, const char* OtherStr);
 void concatenateString(char * destStr, const char* sourceStr);
 void copyString(char * destStr, const char* sourceStr);

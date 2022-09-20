@@ -55,7 +55,7 @@ Device Input/keyboard: none
 Device Output/Monitor: none
 Dependencies: none
 */
-int find_length(const char *s){
+int getStringLength(const char *s){
 	int length = 0;
 	while(s[length] != NULL_CHAR){
 		length++;
@@ -66,11 +66,11 @@ int find_length(const char *s){
 
 int max_length(const char* OneStr, const char* OtherStr){
 	int max_length = 0;
-	if(find_length(OneStr) > find_length(OtherStr)){
-		return find_length(OneStr);
+	if(getStringLength(OneStr) > getStringLength(OtherStr)){
+		return getStringLength(OneStr);
 	}
 	else{
-		return find_length(OtherStr);
+		return getStringLength(OtherStr);
 	}
 	// return find_length(OneStr)
 }
@@ -87,9 +87,9 @@ int max_length(const char* OneStr, const char* OtherStr){
 */
 
 void concatenateString(char* destStr, const char* sourceStr){
-	int destStrlen = find_length(destStr);
+	int destStrlen = getStringLength(destStr);
 	// int destIndex = getStringLength(destStr)
-	int sourceStrlen = find_length(sourceStr);
+	int sourceStrlen = getStringLength(sourceStr);
  	char* temp = (char*) malloc(sizeof(char)* (destStrlen + sourceStrlen));
 	int destStrIndex = 0;
 	int sourceStrIndex = 0;
@@ -121,8 +121,8 @@ Dependencies: getStringLength
 */
 
 void copyString(char* destStr, const char* sourceStr){
-	free(destStr);
-	int sourceLength = find_length(sourceStr);
+	//free(destStr);
+	int sourceLength = getStringLength(sourceStr);
 	destStr = (char*) malloc(sizeof(char)*sourceLength);
 	int index = 0;
 	while (sourceStr[index] != NULL_CHAR){
@@ -130,7 +130,7 @@ void copyString(char* destStr, const char* sourceStr){
 		destStr[index] = sourceStr[index];
 		index++;
 	}
-	free(sourceStr);
+	//free(sourceStr);
 }
 
 /*
@@ -221,7 +221,7 @@ bool getStringConstrained(
 	{
 		// get next character
 		// function: fgetc
-		intChar = fgetc(inStream);
+		intChar = fgetc(instream);
 	}
 	if(intChar == EOF)
 	{
@@ -256,7 +256,7 @@ bool getStringConstrained(
 
 	// get next character as integer
 	// function :fgetc
-	intChar = fgetc(inStream);
+	intChar = fgetc(instream);
 	}
 	//end loop
 	//return successful operation
@@ -278,7 +278,7 @@ bool getStringToDelimiter(FILE *instream, char delimiter, char *capturedString)
 	// call engine function with delimiter
 	// function: getStringConstrained
 	return getStringConstrained(
-							     inStream, 		//file stream pointer
+							     instream, 		//file stream pointer
 								 true,			// clears leading non printable character
 								 true, 			// bool clearLeadingSpace,
 								 true,			// stops at non printable
