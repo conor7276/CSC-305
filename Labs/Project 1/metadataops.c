@@ -352,6 +352,78 @@ Boolean getMetaData(char* filename, OpCodeType **opCodeDataHead, char *endStateM
     // assign temporary local head pointer to parameter return pointer
     *opCodeDataHead = localHeadPtr;
 
-    // return acess result
+    // return access result
     return returnState;
+}
+
+/*
+Function Name: getOpCommand
+Algorithm: acquires one op command, verifies all parts of it, returns as parameter
+Precondition: file is open and file cursor is at beginning of an op code
+Postconditon: in correct operation,
+                find, tests, and returns op command as parameter,
+                and return status as integer
+                - either complete op command found,
+                or last op command found
+Exceptions: correctly and apporoptiately (without program failure)
+            responds to and reports file access failure,
+            incorrectly formatted op command letter,
+            incorrectly formatted op command name,
+            incorrect or out range op command value
+Notes: none
+*/
+
+int getOpCommand(File *filePtr, OpCodeType *inData){
+
+    // initialize function/ variables
+    // initalize local constans
+    const int MAX_CMD_LENGTH = 5;
+    const int MAX_ARG_STR_LENGTH = 15;
+
+    // initalize other variables
+    int accessResult, numBuffer = 0;
+    char strBuffer[STD_STR_LEN];
+    char cmdBuffer[MAX_CMD_LENGTH];
+    char argStrBuffer[MAX_ARG_STR_LENGTH];
+    int runningStringIndex = 0;
+    Boolean stopAtNonPrintable = True;
+    Boolean arg2FailureFlag = False;
+    Boolean arg3FailureFlag = False;
+
+    // get whole op command as a string
+    // fucntion: getLineTo
+    accessResult = getLineTo(filePtr, STD_STR_LEN, SEMICOLON, strBuffer, IGNORE_LEADING_WS, stopAtNonPrintable);
+
+    // check for successful access
+    if(accessResult == NO_ERR){
+
+        // get three-letter command
+        // function: getCommand
+        runningStringIndex = getCommand(cmdBuffer,strBuffer,runningStringIndex);
+
+        // assign op command to node
+        // function: copyString
+        copyString(inData->command, cmdBuffer);
+    } // otherwise, assume unsuccessful access
+    else{
+
+        // set pointer to data structure to null
+        inData = NULL;
+
+        // return op command access failure
+        return OPCMD_ACCESS_ERR;
+    }
+
+    // verify op command
+    // functionL verifyValidCommand
+    if(verifyValidCommand(cmdBuffer) == False){
+
+        // return op command error
+        return CORRUPT_OPCMD_ERR;
+    }
+
+
+    // set all struct values that may not be initialized to defaults
+    intData->pid = 0;
+    inData->inOutArg[0] = NULL_CHAR;
 }
