@@ -1,4 +1,4 @@
-#include"metadataops.h"
+#include "metadataops.h"
 
 // constant
 const int BAD_ARG_VAL = -1;
@@ -137,7 +137,7 @@ void displayMetaData(OpCodeType *localPtr){
 
         // print op end time
         // function: printf
-        printf("/op end time: %8.6f" localPtr->opEndTime);
+        printf("/op end time: %8.6f", localPtr->opEndTime);
 
         // end line
         // function: printf
@@ -228,7 +228,7 @@ Boolean getMetaData(char* filename, OpCodeType **opCodeDataHead, char *endStateM
 
     // check first line for correct leader
     // function: getLineTo, compareString
-    if(getLineTo(fileAccessPtr,MAX_STR_LEN,COLON,databuffer,ignoreLeadingWhiteSpace, stopAtNonPrintable) != NO_ERR || compareString(dataBuffer, "Start Program Meta-Data Code") != STR_EQ){
+    if(getLineTo(fileAccessPtr,MAX_STR_LEN,COLON,dataBuffer,ignoreLeadingWhiteSpace, stopAtNonPrintable) != NO_ERR || compareString(dataBuffer, "Start Program Meta-Data Code") != STR_EQ){
 
         // close file
         // function: fclose
@@ -306,14 +306,14 @@ Boolean getMetaData(char* filename, OpCodeType **opCodeDataHead, char *endStateM
 
             // add the last node to the linked list
             //function: addNode
-            localheadPtr = addNode(localheadPtr, newNodePtr);
+            localHeadPtr = addNode(localHeadPtr, newNodePtr);
 
             // set access result to no error for later operation
             accessResult = NO_ERR;
 
             // check last line for incorrect end descriptor
             // functionL getLineTo, compareString
-            if(getLineTo(fileAccessPtr,MAX_STR_LEN,PERIOD,dataBuffer,ignroeLeadingWhiteSpace, stopAtNonPrintable) != NO_ERR || compareString(dataBuffer, "End Program Meta-Data Code") != STR_EQ){
+            if(getLineTo(fileAccessPtr,MAX_STR_LEN,PERIOD,dataBuffer,ignoreLeadingWhiteSpace, stopAtNonPrintable) != NO_ERR || compareString(dataBuffer, "End Program Meta-Data Code") != STR_EQ){
 
                 // set access result to corrupteed descriptor error
                 accessResult = MD_CORRUPT_DESCRIPTOR_ERR;
@@ -373,7 +373,7 @@ Exceptions: correctly and apporoptiately (without program failure)
 Notes: none
 */
 
-int getOpCommand(File *filePtr, OpCodeType *inData){
+int getOpCommand(FILE *filePtr, OpCodeType *inData){
 
     // initialize function/ variables
     // initalize local constans
@@ -424,6 +424,377 @@ int getOpCommand(File *filePtr, OpCodeType *inData){
 
 
     // set all struct values that may not be initialized to defaults
-    intData->pid = 0;
+    inData->pid = 0;
     inData->inOutArg[0] = NULL_CHAR;
+    inData->intArg2 = 0;
+    inData->intArg3 = 0;
+    inData->opEndTime = 0.0;
+    inData->nextNode = NULL;
+
+    // check for device ommand
+    // function: compareString
+
+    if(compareString(cmdBuffer,"dev")==STR_EQ){
+
+        // get in.out argument
+        // function: compareString
+        runningStringIndex = getStringArg(argStrBuffer,strBuffer,runningStringIndex);
+
+        // set device in/out argument
+        // function: copyString
+        copyString(inData->inOutArg, argStrBuffer);
+
+        // check correct argument
+        // function: compareString
+
+        if(compareString(argStrBuffer,"in") != STR_EQ && compareString(argStrBuffer,"out") != STR_EQ){
+
+            // return argument error
+            return CORRUPT_OPCMD_ARG_ERR;
+        }
+    }
+
+    // get first string arg
+    // function: getStringArg
+    runningStringIndex = getStringArg(argStrBuffer, strBuffer, runningStringIndex);
+
+    // set device in/out argument
+    // function: copyString
+    copyString(inData->strArg1, argStrBuffer);
+
+    // check for legitimate first string arg
+    // funcrion: verifyFirstStringArg
+    if(veifyFirstStringArg(argStrBuffer) == False){
+
+        // return argument errorMessage
+        return CORRUPT_OPCMD_ARG_ERR;
+    }
+
+    // check for last op command found
+    // function: compareString
+    if(compareString(inData->command,"sys") == STR_EQ && compareString(inData->strArg1,"end") == STR_EQ){
+
+        // return last op command found
+        return LAST_OPCMD_FOUND_MSG;
+    }
+
+    // check for app start seconds argument
+    // function: compareString
+    if(compareString(inData->command,"app") == STR_EQ && compareString(inData->strArg1,"start") == STR_EQ){
+
+        // get number argument
+        // function: getNumberArg
+        runningStringIndex = getNumberArg(&numBuffer,strBuffer,runningStringIndex);
+
+        // check for failed number access
+        if(numBuffer <= BAD_ARG_VAL){
+
+            // set failure flag
+            arg2FailureFlag = True;
+        }
+
+        // set first int argument to number
+        inData->intArg2 = numBuffer;
+    } // check for cpu cycle time, function: compareString
+    else if(compareString(inData->command,"cpu") == STR_EQ){
+
+        // get number argument
+        // function: getNumberArg
+
+        runningStringIndex = getNumberArg(&numBuffer,strBuffer,runningStringIndex);
+
+        // check for failed number access
+        if(numBuffer <= BAD_ARG_VAL){
+            //set failure flag
+            arg2FailureFlag = True;
+        }
+        // set first int argument to number
+        inData->intArg2 = numBuffer;
+    } // check for device cycle time, function: compareString
+    else if(compareString(inData->command,"dev") == STR_EQ){
+
+        // get number argument
+        // function: getNumberArg
+        runningStringIndex = getNumberArg(&numBuffer,strBuffer,runningStringIndex);
+
+        // check for failed number access
+        if(numBuffer <= BAD_ARG_VAL){
+
+            // set failure flag
+            arg2FailureFlag = True;
+        }
+
+        // set first int argument to number
+        inData->intArg2 = numBuffer;
+    }
+
+    // check for memory base and offset
+    // function: comapreString
+    else if(comapreString(inData->command,"mem") == STR_EQ){
+
+
+        // get number argument for base
+        // function: getNumberArg
+        runningStringIndex = getNumberArg(&numBuffer,strBuffer,runningStringIndex);
+
+        // check for failed number access
+        if(numBuffer <= BAD_ARG_VAL){
+
+            // set failure flag
+            arg2FailureFlag = True;
+        }
+
+        // set first int arguiment to number
+        inData->intArg2 = numBuffer;
+
+        // get number argument for offset
+        // function: getNumberArg
+        runningStringIndex = getNumberArg(&numBuffer,strBuffer,runningStringIndex);
+        
+        // check for failed number access
+        if(numBuffer <= BAD_ARG_VAL){
+
+            // set failure flag
+            arg3FailureFlag = True;
+        }
+
+        // set second int argument to number
+        inData->intArg3 = numBuffer;
+    }
+
+    // check int args for upload failure
+    if(arg2FailureFlag == True || arg3FailureFlag == True){
+
+        // return argument error
+        return CORRUPT_OPCMD_ARG_ERR;
+    }
+
+    // return complete op command found message
+    return COMPLETE_OPCMD_FOUND_MSG;
+}
+
+
+/*
+Function Name: getNumberArg
+Algorithm: skips leaving white space,
+            acquires next integer from op command input string
+            ending at comma or end of strings
+Precondition: input string has some remaining string argument
+Postconditon: in correct operation, captures next integer
+                argument, returns index location after process finished
+Exceptions: none
+Notes: none
+*/
+
+int getNumberArg(int *number, char *inputStr, int index){
+
+    // initialize function/ variables
+    Boolean foundDigit = False;
+    *number = 0;
+    int multiplier = 1;
+
+    // loop to skip white space
+    while(inputStr[index] <= SPACE || inputStr[index] == COMMA){
+
+        // increment index
+        index++;
+    }
+
+    // loop across string length
+    // function: isDigit
+    while(isDigit(inputStr[index]) == True && inputStr[index] != NULL_CHAR){
+
+        // set digit found flag
+        foundDigit = True;
+
+        // assign digit to output
+        (*number) = (*number) * multiplier + inputStr[index] - '0';
+        //increment index and multiplier
+        index++;
+        multiplier = 10;
+
+    }
+    // end loop across string length
+
+    // check for digit not found
+    if(foundDigit == False){
+
+        // set number to BAD_ARG_VAL constant
+        *number = BAD_ARG_VAL;
+    }
+
+    // return current index
+    return index;
+}
+
+
+/*
+Function Name: getStringArg
+Algorithm: skips learning while space,  
+            acquires sub string from op command input strings
+            ending at comma or end of string
+Precondition: input string has some remaining string argument
+Postcondition: in correct operation, captures next string argument
+Exceptions: none
+Notes: none
+*/
+int getStringArg(char*strArg, char *inputStr, int index){
+
+    // function / variable initialization
+    int localIndex = 0;
+
+    // loop to skip white space and comma
+    while(inputStr[index] <= SPACE || inputStr[index] == COMMA){
+        // increment index
+        index++;
+    }
+
+    while(inputStr[index] != COMMA && inputStr[index] != NULL_CHAR){
+
+        // assign character from input string to buffer string
+        strArg[localIndex] = inputStr[index];
+
+        // increment index
+        index++; localIndex++;
+
+        // set next character to null integer
+        strArg[localIndex] == NULL_CHAR;
+    }
+
+    // end loop across string length
+
+    // return current index
+    return index;
+}
+
+
+/*
+Function Name: isDigit
+Algorithm: checks for character digit, returns result
+Precondition: test value is character
+Postcondition: if test value is a value '0' < value < '9' returns, true otherwise returns false
+Exceptions: None
+Notes: None
+*/
+
+Boolean isDigit(char testChar){
+
+    // check for test character between characters '0'-'9'
+    if(testChar >= '0' && testChar <= '9'){
+
+        // return true
+        return True;
+    }
+
+    // otherwise, assume character is not a digit, return false
+    return False;
+}
+
+
+/*
+Function Name: updateEndCount
+Algorithm: updates number of "end" op comands found in file
+Precondition: count >= 0, op string has "end" or other op name
+Postcondition: if op string has "end", unput count + 1 is returned;
+                otherwise, input count is returned unchanged
+Exceptions: none
+Notes: none
+*/
+int updateEndCount(int count, char *opString){
+
+    // check for "end" in op string
+    // function: compareString
+    if(compareString(opString,"end") == STR_EQ){
+
+        // return incremented end count
+        return count + 1;
+    }
+
+    // return unchanged start count
+    return count;
+}
+
+
+/*
+Function Name: updateStartCount
+Algorithm: updates number of "start" op commands found in file
+Precondition: count >= 0, op string has "start" or other op name
+Postcondition: if op string has "start", unput count + 1 is returned;
+                otherwise, input count is returned unchange
+Functions: None
+Notes: None
+*/
+int updateStartCount(int count, char *opString){
+
+    // check for "start" in op string
+    // function: compareString
+    if(comapreString(opString,"start") == STR_EQ){
+
+        // return incremented start count
+        return count + 1;
+    }
+
+    // return unchanged start count
+    return count;
+}
+
+/*
+Function Name: verifyFirstStringArg
+Algorithm: check string argument for one of the allowed string arguments
+Precondition: input string is provided
+Postcondition: in correct operation, repost True if given string is in arhument list, false if not
+Exceptions: none
+Notes: none
+*/
+Boolean verifyFirstStringArg(char *strArg){
+
+    // check for all possible string arg 1 possibilities
+    // function: comapreString
+    if(comareString(strArg,"access") == STR_EQ
+        || compareString(strArg,"allocate") == STR_EQ
+        || compareString(strArg, "end") == STR_EQ
+        || comapreString(strArg,"ethernet") == STR_EQ
+        || comapreString(strArg,"hard drive") == STR_EQ
+        || comapreString(strArg,"keyboard") == STR_EQ
+        || comapreString(strArg,"monitor") == STR_EQ
+        || comapreString(strArg, "printer") == STR_EQ
+        || comapreString(strArg,"process") == STR_EQ
+        || comapreString(strArg,"serial") == STR_EQ
+        || comapreString(strArg, "sound signal") == STR_EQ
+        || comapreString(strArg,"usb") == STR_EQ
+        || comapreString(strArg,"video signal") == STR_EQ)
+    {
+        // return True
+        return True;
+    }
+    // return False
+    return False; // temporary stub value       
+}
+
+
+
+
+/*
+Function Name; verifyValidCommand
+Algorithm: check for string argument for one of the allowed commands
+Precondition: input string is procided
+Postcondition: in correct operation, reports if given string is a command False if not
+Exceptions: none
+Notes: none
+*/
+Boolean verifyValidCommand(char *testCmd){
+
+    // check for five string command arguments
+    if(comapreString(testCmd,"sys") == STR_EQ
+        || compareString(testCmd,"app") == STR_EQ
+        || comapreString(testCmd,"cpu") == STR_EQ
+        || comapreString(testCmd,"mem") == STR_EQ
+        || comapreString(testCmd,"dev") == STR_EQ)
+    {
+        // return True
+        return True;
+    }
+    
+    // return False
+    return False;
 }
