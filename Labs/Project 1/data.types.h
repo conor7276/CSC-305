@@ -14,11 +14,11 @@ typedef enum {False, True} Boolean;
 // config data structure
 typedef struct ConfigDataType{
     double version;
-    char metaDataFile[100];
+    char metaDataFileName[100];
     int cpuSchedCode;
     int quantumCycles;
-    int memeAvaliable;
-    int proccCycleRate;
+    int memAvailable;
+    int procCycleRate;
     int ioCycleRate;
     int logToFileName[100];
 } ConfigDataType;
@@ -26,7 +26,7 @@ typedef struct ConfigDataType{
 typedef struct OpCodeType{
     int pid;            //pid, added when pcb is created
     char command[5];    //three letter command quantity
-    char inOurArg[5];   //for device in/out
+    char inOutArg[5];   //for device in/out
     char strArg1[15];   //arg1 descriptor, up to 12 chars
     int inArg2;         //cycles or memory assumes 4 bytes int
     int inArg3;         //memory, assume 4 byte int

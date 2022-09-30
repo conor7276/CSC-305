@@ -16,6 +16,8 @@ int main(int argc, char** argv){
 
 	Boolean configDisplayFlag = False;
 
+	Boolean configUploadFlag = False;
+
 	Boolean mdDisplayFlag = False;
 
 	Boolean runSimFlag = False;
@@ -28,9 +30,9 @@ int main(int argc, char** argv){
 
 	int fileStrLen, fileStrSubLoc;
 
-	char fileName{STD_STR_LEN};
+	char fileName[STD_STR_LEN];
 
-	char errorMessage{MAX_STR_LEN};
+	char errorMessage[MAX_STR_LEN];
 
 	ConfigDataType *configDataPtr = NULL;
 
@@ -61,7 +63,7 @@ int main(int argc, char** argv){
 		
 	
 	// loop acorss args (starting at 1) and program runflag
-	while( programRunFlag == False && argInde < argc){
+	while( programRunFlag == False && argIndex < argc){
 
 		// find length to verify file name
 		// function: getStringLength, findSubString
@@ -91,7 +93,7 @@ int main(int argc, char** argv){
 			 configUploadFlag = True;
 
 			 // set metadata display flag
-			 mdDisplayFlag = Ture;
+			 mdDisplayFlag = True;
 		}
 
 		// otherwise, check for -rs(run simulator)
@@ -109,11 +111,11 @@ int main(int argc, char** argv){
 		//otherwise,check for file name, ending in .cnf
 		// must be last flag
 
-		else if(fileStrSubLoc !+ SUBSTRING_NOT_FOUND && fileStrSubLoc == fileStrLen - lastFourLetters){
+		else if(fileStrSubLoc != SUBSTRING_NOT_FOUND && fileStrSubLoc == fileStrLen - lastFourLetters){
 
 			// set file name to variable
 			// function: copyString
-			copyString(filename,argv[argIndex]);
+			copyString(fileName,argv[argIndex]);
 
 			//set program run flag
 			programRunFlag = True;
@@ -148,7 +150,7 @@ int main(int argc, char** argv){
 		// upload config file, check for success
 		// function getStringLength, getConfigData
 
-		if(getStringLength(filename) > 0 && getConfigData(filename,&configDataPtr,errorMessage) == True){
+		if(getStringLength(fileName) > 0 && getConfigData(fileName,&configDataPtr,errorMessage) == True){
 
 			// check config display flag
 			if(configDisplayFlag == True){
@@ -179,10 +181,10 @@ int main(int argc, char** argv){
 		// upload meta data file, check for success
 		// function: getMetaData
 
-		if(getMetaData(condigDataPtr->metaDataFileName, &metaDataPtr, errorMessage) == True){
+		if(getMetaData(configDataPtr->metaDataFileName, &metaDataPtr, errorMessage) == True){
 
 			// check meta data display Flag
-			if(mdDusplayFlag == True){
+			if(mdDisplayFlag == True){
 
 				// display meta data
 				// function: displayMetaData

@@ -17,7 +17,7 @@ OpCodeType *addNode(OpCodeType *localPtr, OpCodeType *newNode){
 
     // check for local pointer assigned to NULL
     if(localPtr == NULL){
-        // access memort for new link/node
+        // access memory for new link/node
         // function: malloc
         localPtr = (OpCodeType *) malloc(sizeof(OpCodeType));
 
