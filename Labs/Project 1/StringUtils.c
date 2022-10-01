@@ -226,7 +226,7 @@ bool getStringConstrained(
 	intChar = fgetc(instream);
 
 	// loop to clear non printable or space, if indicated
-	while ((intChar != EOF) && ((clearLeadingNonPrintable && intChar == (int)SPACE)) || (clearLeadingSpace && intChar == (int)SPACE))
+	while (((intChar != EOF) && ((clearLeadingNonPrintable && intChar == (int)SPACE))) || (clearLeadingSpace && intChar == (int)SPACE))
 	{
 		// get next character
 		// function: fgetc
