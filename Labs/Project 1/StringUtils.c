@@ -27,26 +27,32 @@ Device Output/Monitor: none
 Dependencies: getStringLength	
 */
 
-int compareString(const char* OneStr, const char* OtherStr){
+int compareString(const char* oneStr, const char* otherStr){
 
-	int index = 0;
-	int result = 0;
-	while(OneStr[index] != NULL_CHAR && OtherStr[index] != NULL_CHAR){
+	// initialize function/variables
+	int diff, index = 0;
 
-		if(OneStr[index] != OtherStr[index]){
-			return result;
+	// loop to end of shortest string
+	// with overrun portection
+	while(oneStr[index] != NULL_CHAR && otherStr[index] != NULL_CHAR && index < MAX_STR_LEN){
+		// get difference in characters
+		diff = oneStr[index] - otherStr[index];
+		
+		// check for difference between characters
+		if(diff != 0)
+		{
+			// return difference
+			return diff;
 		}
-	index++;
-        }
-
-	int length = max_length(OneStr,OtherStr);
-	if(index == length){
-		result = 1;
 	}
-	return result;
+	// end loop
+
+	// return differenc in lengths, if any
+	// function getStringLength
+	return getStringLength(oneStr - getStringLength(otherStr));
 }
 /*
-Name: find_length
+Name: getStringLength
 Process: find the length of a string by counting characters up to the NULL_CHAR character
 Function Input/Parameters: c-style string (char *)
 Function Output/Parameters: None
@@ -64,6 +70,7 @@ int getStringLength(const char *s){
 
 }
 
+/*
 int max_length(const char* OneStr, const char* OtherStr){
 	int max_length = 0;
 	if(getStringLength(OneStr) > getStringLength(OtherStr)){
@@ -74,6 +81,7 @@ int max_length(const char* OneStr, const char* OtherStr){
 	}
 	// return find_length(OneStr)
 }
+*/
 
 /*
 	Name: concatenateString

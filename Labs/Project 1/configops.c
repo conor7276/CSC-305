@@ -73,7 +73,7 @@ void displayConfigData(ConfigDataType* configData) {
 	printf("I/O cycle rate    : %d\n", configData->ioCycleRate);
 	configCodeToString(configData->logToCode, displayString);
 	printf("Log to selection  : %s\n", displayString);
-	printf("Log file name     : %s\n\n", configData->logtoFileName);
+	printf("Log file name     : %s\n\n", configData->logToFileName);
 }
 
 /* 
@@ -203,7 +203,7 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 					tempData->logToCode = getLogToCode(dataBuffer);
 					break;
 				case CFG_LOG_FILE_NAME_CODE:
-					copyString(tempData->logtoFileName, dataBuffer);
+					copyString(tempData->logToFileName, dataBuffer);
 					break;
 
 				}
@@ -391,8 +391,7 @@ ConfigDataCodes getLogToCode(char* logToStr)
 	return returnVal;
 }
 
-Boolean valueInRange(int lineCode, int intVal, double doubleVal, char* stringVal)
-{
+Boolean valueInRange(int lineCode, int intVal, double doubleVal, char* stringVal){
 	// initialize function/ variables.
 	Boolean result = True;
 	char* tempStr;
@@ -493,3 +492,5 @@ Boolean valueInRange(int lineCode, int intVal, double doubleVal, char* stringVal
 	// return result of limits analysis.
 	return result;
 }
+
+	

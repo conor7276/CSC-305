@@ -1,5 +1,6 @@
 #ifndef STRING_UTILS_H
 #define STRING_UTILS_H
+
 // Header Files
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,7 +20,7 @@ typedef struct ConfigDataType
 	int procCycleRate;
 	int ioCycleRate;
 	int logToCode;
-	char logtoFileName[100];
+	char logToFileName[100];
 } ConfigDataType;
 
 typedef struct OpCodeType
@@ -58,11 +59,6 @@ extern const Boolean ACCEPT_LEADING_WS;
 
 
 //Function prototypes
-int compareString(const char* OneStr, const char* OtherStr);
-//int find_length(const char* s);
-int max_length(const char* OneStr, const char* OtherStr);
-void concatenateString(char * destStr, const char* sourceStr);
-void copyString(char * destStr, const char* sourceStr);
 int getLineTo(
 		FILE *filePtr, 
 		int bufferSize, 
@@ -72,13 +68,21 @@ int getLineTo(
 		Boolean stopAtNonPrintable);
 
 Boolean isEndOfFile(FILE *filePtr);
+
 int getStringLength(const char *teststr);
+
 void copyString( char* destStr, const char *sourceStr);
+
 void concatenateString( char* destStr, const char *sourceStr);
+
 int compareString( const char *oneStr, const char *otherStr);
+
 void getSubString( char *destStr, const char *sourceStr, int startIndex, int endIndex);
+
 int findSubString( const char *testStr, const char *searchSubStr);
+
 void setStrToLowerCase( char *destStr, const char *sourceStr);
+
 char toLowerCase(char testChar);
 
 bool getStringConstrained( 
@@ -87,7 +91,7 @@ bool getStringConstrained(
 		bool clearLeadingSpace,
 		bool stopAtNonPrintable, 
 		char delimiter,	
-		char  *capturedString);
+		char *capturedString);
 
 bool getStringToDelimiter(
 		FILE *inStream,
