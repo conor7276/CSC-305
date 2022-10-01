@@ -464,7 +464,7 @@ int getOpCommand(FILE *filePtr, OpCodeType *inData){
 
     // check for legitimate first string arg
     // funcrion: verifyFirstStringArg
-    if(veifyFirstStringArg(argStrBuffer) == False){
+    if(verifyFirstStringArg(argStrBuffer) == False){
 
         // return argument errorMessage
         return CORRUPT_OPCMD_ARG_ERR;
@@ -530,7 +530,7 @@ int getOpCommand(FILE *filePtr, OpCodeType *inData){
 
     // check for memory base and offset
     // function: comapreString
-    else if(comapreString(inData->command,"mem") == STR_EQ){
+    else if(compareString(inData->command,"mem") == STR_EQ){
 
 
         // get number argument for base
@@ -728,7 +728,7 @@ int updateStartCount(int count, char *opString){
 
     // check for "start" in op string
     // function: compareString
-    if(comapreString(opString,"start") == STR_EQ){
+    if(compareString(opString,"start") == STR_EQ){
 
         // return incremented start count
         return count + 1;
@@ -750,19 +750,19 @@ Boolean verifyFirstStringArg(char *strArg){
 
     // check for all possible string arg 1 possibilities
     // function: comapreString
-    if(comareString(strArg,"access") == STR_EQ
+    if(compareString(strArg,"access") == STR_EQ
         || compareString(strArg,"allocate") == STR_EQ
         || compareString(strArg, "end") == STR_EQ
-        || comapreString(strArg,"ethernet") == STR_EQ
-        || comapreString(strArg,"hard drive") == STR_EQ
-        || comapreString(strArg,"keyboard") == STR_EQ
-        || comapreString(strArg,"monitor") == STR_EQ
-        || comapreString(strArg, "printer") == STR_EQ
-        || comapreString(strArg,"process") == STR_EQ
-        || comapreString(strArg,"serial") == STR_EQ
-        || comapreString(strArg, "sound signal") == STR_EQ
-        || comapreString(strArg,"usb") == STR_EQ
-        || comapreString(strArg,"video signal") == STR_EQ)
+        || compareString(strArg,"ethernet") == STR_EQ
+        || compareString(strArg,"hard drive") == STR_EQ
+        || compareString(strArg,"keyboard") == STR_EQ
+        || compareString(strArg,"monitor") == STR_EQ
+        || compareString(strArg, "printer") == STR_EQ
+        || compareString(strArg,"process") == STR_EQ
+        || compareString(strArg,"serial") == STR_EQ
+        || compareString(strArg, "sound signal") == STR_EQ
+        || compareString(strArg,"usb") == STR_EQ
+        || compareString(strArg,"video signal") == STR_EQ)
     {
         // return True
         return True;
@@ -785,11 +785,11 @@ Notes: none
 Boolean verifyValidCommand(char *testCmd){
 
     // check for five string command arguments
-    if(comapreString(testCmd,"sys") == STR_EQ
+    if(compareString(testCmd,"sys") == STR_EQ
         || compareString(testCmd,"app") == STR_EQ
-        || comapreString(testCmd,"cpu") == STR_EQ
-        || comapreString(testCmd,"mem") == STR_EQ
-        || comapreString(testCmd,"dev") == STR_EQ)
+        || compareString(testCmd,"cpu") == STR_EQ
+        || compareString(testCmd,"mem") == STR_EQ
+        || compareString(testCmd,"dev") == STR_EQ)
     {
         // return True
         return True;

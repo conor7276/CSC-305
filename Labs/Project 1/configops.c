@@ -1,5 +1,6 @@
 // header file
 #include "configops.h"
+#include "StringUtils.h"
 
 /*
 Function Name: clearConfigData
@@ -72,7 +73,7 @@ void displayConfigData(ConfigDataType* configData) {
 	printf("I/O cycle rate    : %d\n", configData->ioCycleRate);
 	configCodeToString(configData->logToCode, displayString);
 	printf("Log to selection  : %s\n", displayString);
-	printf("Log file name     : %s\n\n", configData->logToFileName);
+	printf("Log file name     : %s\n\n", configData->logtoFileName);
 }
 
 /* 
@@ -202,7 +203,7 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 					tempData->logToCode = getLogToCode(dataBuffer);
 					break;
 				case CFG_LOG_FILE_NAME_CODE:
-					copyString(tempData->logToFileName, dataBuffer);
+					copyString(tempData->logtoFileName, dataBuffer);
 					break;
 
 				}
@@ -271,7 +272,7 @@ ConfigDataCodes getCpuSchedCode(char* codeStr)
 			// set up temporary string for testing
 			// fucntion: getString Length, malloc
 		int strlen = getStringLength(codeStr);
-		char* tempStr = (char*)malloc(strLen + 1);
+		char* tempStr = (char*)malloc(strlen + 1);
 		// set default return to FCFS-N
 		int returnVal = CPU_SCHED_FCFS_N_CODE;
 		// set string to lower case for testing
@@ -314,7 +315,7 @@ ConfigDataCodes getCpuSchedCode(char* codeStr)
 
 
 int getDataLineCode(char* dataBuffer)
-		{
+{
 			// return appropriate code depending on prompt string provided
 			// function: compareString
 			if (compareString(dataBuffer, "Version/Phase") == STR_EQ)
@@ -331,7 +332,7 @@ int getDataLineCode(char* dataBuffer)
 			}
 			if (compareString(dataBuffer, "Quantum Time (cycles)") == STR_EQ)
 			{
-				return CFG QUANT_CYCLES_CODE;
+				return CFG_QUANT_CYCLES_CODE;
 			}
 			if (compareString(dataBuffer, "Memory Available (KB)") == STR_EQ)
 			{
@@ -343,7 +344,7 @@ int getDataLineCode(char* dataBuffer)
 			}
 			if (compareString(dataBuffer, "I/O Cycle Time (msec)") == STR_EQ)
 			{
-				return CFG_10_CYCLES_CODE;
+				return CFG_IO_CYCLES_CODE;
 			}
 			if (compareString(dataBuffer, "Log To") == STR_EQ)
 			{
@@ -355,15 +356,15 @@ int getDataLineCode(char* dataBuffer)
 			}
 
 			return CFG_CORRUPT_PROMT_ERR;
-		}
+}
 
 ConfigDataCodes getLogToCode(char* logToStr)
 {
 	// initialize function/variables.
 	// create temporary string
 	// function: getStringLength, malloc.
-	int strlen = getString Length(logToStr);
-	char* tempStr = (char*)malloc(strLen + 1);
+	int strlen = getStringLength(logToStr);
+	char* tempStr = (char*)malloc(strlen + 1);
 	// set default to log to monitor
 	int returnVal = LOGTO_MONITOR_CODE;
 	// set temp string to lower case.
@@ -412,8 +413,8 @@ Boolean valueInRange(int lineCode, int intVal, double doubleVal, char* stringVal
 		case CFG_CPU_SCHED_CODE:
 			// create temporary string and set to lower case
 			// function: getStringLength, malloc, setStrToLowerCase
-			strLen = getStringLength(stringVal);
-			tempStr = (char*) malloc(strLen + 1);
+			strlen = getStringLength(stringVal);
+			tempStr = (char*) malloc(strlen + 1);
 			setStrToLowerCase(tempStr, stringVal);
 			// check for not finding one of the scheduling strings.
 			// function: compareString
@@ -424,70 +425,70 @@ Boolean valueInRange(int lineCode, int intVal, double doubleVal, char* stringVal
 				&& compareString(tempStr, "rr-p") != STR_EQ)
 			{
 				// set boolean result to false
-				result False;
+				result = False;
 			}
 			// free temp string memory
 			// function: free
-			free(tempStr)
+			free(tempStr);
 			
 			break;
 			// for quantum cycles.
-				case CFG_QUANT_CYCLES_CODE :
-				// check for quantum cycles limits exceeded
-				if (intVal < || intVal > 100)
-				{
-					// set boolean result to false.
-					result False;
-				}
-				break;
-				// for memory avaible
-				case CFG_MEM_AVAILABLE_CODE :
-					// check for available memory limits exceeded
-					if (intVal < 1024 || intVal > 102400)
-					{
-						// set Boolean result to false
-						result = False;
-					}
-					break;
-					// check for process cycles
-					case CFG_PROC_CYCLES_CODE :
-						// check for process cycles limits exceeded
-						if (intVal < 1 || intVal > 100)
-						{
-							I
-								// set boolean result to False
-								result False;
-						}
-						break;
-						// check for I/0 cycles.
-					case CFG_IO_CYCLES_CODE:
-						// check for I/O cycles limits exceeded
-						if (intVal < 1 || intVal > 1000)
-						{
-							// set boolean result to False
-							result = False;
-						}
-						break;
-						// check for Log to operation
-					case CFG_LOG_TO_CODE:
-						// create temporary string and set to lower set to lower case.
-						// function: getStringLength, malloc, setStrToLowerCase
-						strlen = getString Length(stringVal);
-						tempStr = (char*)malloc(strLen + 1);
-						setStrToLowerCase(tempStr, stringVal);
-						// check for not finding one of the log to strings
-						// function: compareString
-						if (compareString(tempStr, "both") != STR_EQ
-							&& compareString(tempStr, "monitor") != STR_EQ
-							&& compareString(tempStr, "file") != STR_EQ)
-						{
-							// set Boolean result to false
-							result False;
-						}
-						// free temp string memory
-						// function: free
-						free(tempStr);
-						break;
+		case CFG_QUANT_CYCLES_CODE :
+			// check for quantum cycles limits exceeded
+			if (intVal < 0 || intVal > 100)
+			{
+				// set boolean result to false.
+				result = False;
+			}
+			break;
+			// for memory avaible
+		case CFG_MEM_AVAILABLE_CODE :
+			// check for available memory limits exceeded
+			if (intVal < 1024 || intVal > 102400)
+			{
+				// set Boolean result to false
+				result = False;
+			}
+			break;
+			// check for process cycles
+		case CFG_PROC_CYCLES_CODE :
+			// check for process cycles limits exceeded
+			if (intVal < 1 || intVal > 100)
+			{
+							
+				// set boolean result to False
+				result = False;
+			}
+			break;
+			// check for I/0 cycles.
+		case CFG_IO_CYCLES_CODE:
+			// check for I/O cycles limits exceeded
+			if (intVal < 1 || intVal > 1000)
+			{
+				// set boolean result to False
+				result = False;
+			}
+			break;
+			// check for Log to operation
+		case CFG_LOG_TO_CODE:
+			// create temporary string and set to lower set to lower case.
+			// function: getStringLength, malloc, setStrToLowerCase
+			strlen = getStringLength(stringVal);
+			tempStr = (char*)malloc(strlen + 1);
+			setStrToLowerCase(tempStr, stringVal);
+			// check for not finding one of the log to strings
+			// function: compareString
+			if (compareString(tempStr, "both") != STR_EQ
+				&& compareString(tempStr, "monitor") != STR_EQ
+				&& compareString(tempStr, "file") != STR_EQ)
+			{
+				// set Boolean result to false
+				result = False;
+			}
+			// free temp string memory
+			// function: free
+			free(tempStr);
+			break;
 	}
 	// return result of limits analysis.
 	return result;

@@ -74,7 +74,7 @@ int main(int argc, char** argv){
 		// check for -dc (display config flag)
 		// function: compareString
 
-		if(comapreString(argv[argIndex],"-dc" == STR_EQ)){
+		if(compareString(argv[argIndex],"-dc" == STR_EQ)){
 
 					// set config upload flag
 			configUploadFlag = True;
@@ -99,7 +99,7 @@ int main(int argc, char** argv){
 		// otherwise, check for -rs(run simulator)
 		// function: compareString
 
-		else if (comapreString(argv[argIndex],"-rs" == STR_EQ)){
+		else if (compareString(argv[argIndex],"-rs" == STR_EQ)){
 			
 			// set config upload flag
 			configUploadFlag = True;
