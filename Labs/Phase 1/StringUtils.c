@@ -1,4 +1,6 @@
+// header files
 #include "StringUtils.h"
+
 const char NULL_CHAR = '\0';
 const char SPACE = ' ';
 const char COLON = ':';
@@ -11,135 +13,172 @@ const int STR_EQ = 0;
 const int SUBSTRING_NOT_FOUND = -1001;
 const Boolean IGNORE_LEADING_WS = True;
 const Boolean ACCEPT_LEADING_WS = False;
-// File* == char**
-/*
-Name: compareString
-Process: compares two string swith the following results
-	if left string is less than right string, returns less than zero.
-	if left string is greater than right string, returns greater than zero.
-	if left string equals right string . returns zero
-	- equals test includes length
-Function Input/Parameters: c-style left and right strings (char *)
-Function Output/Parameters:	none
-Function Output/Returned: result as specified (int)
-Device Input/Keyboard: none
-Device Output/Monitor: none
-Dependencies: getStringLength	
-*/
-
-int compareString(const char* oneStr, const char* otherStr){
-
-	// initialize function/variables
-	int diff, index = 0;
-
-	// loop to end of shortest string
-	// with overrun portection
-	while(oneStr[index] != NULL_CHAR && otherStr[index] != NULL_CHAR && index < MAX_STR_LEN){
-		// get difference in characters
-		diff = oneStr[index] - otherStr[index];
-		
-		// check for difference between characters
-		if(diff != 0)
-		{
-			// return difference
-			return diff;
-		}
-	}
-	// end loop
-
-	// return differenc in lengths, if any
-	// function getStringLength
-	return getStringLength(oneStr - getStringLength(otherStr));
-}
-/*
-Name: getStringLength
-Process: find the length of a string by counting characters up to the NULL_CHAR character
-Function Input/Parameters: c-style string (char *)
-Function Output/Parameters: None
-Function Output/Returned: length of string
-Device Input/keyboard: none
-Device Output/Monitor: none
-Dependencies: none
-*/
-int getStringLength(const char *s){
-	int length = 0;
-	while(s[length] != NULL_CHAR){
-		length++;
-	}
-	return length;
-
-}
 
 /*
-int max_length(const char* OneStr, const char* OtherStr){
-	int max_length = 0;
-	if(getStringLength(OneStr) > getStringLength(OtherStr)){
-		return getStringLength(OneStr);
-	}
-	else{
-		return getStringLength(OtherStr);
-	}
-	// return find_length(OneStr)
-}
-*/
+ Name: compareString
+ Process: compares two strings with the following results
+          if left string less than right string, returns less than zero
+          if left string greater than right string, returns grater than zero
+          if left string equals right/string, returns zero
+          - equals test includes length
+ Function Iutput/Parameters: c-style left and right strings (char *)
+ Function Output/Parameters: none
+ Function Output/Returned: result as specified (int)
+ Device Input/Keyboard: none
+ Device Output/Monitor: none
+ Dependencies: getStringLength
+ */
+int compareString( const char *oneStr, const char *otherStr )
+  {
+   // initialize function/variables
+   int diff, index = 0;
+
+   // loop to end of shortest string
+   //  with overrun protection
+   while( oneStr[ index ] != NULL_CHAR
+             && otherStr[ index ] != NULL_CHAR
+                && index < MAX_STR_LEN)
+      {
+       // get difference in characters
+       diff= oneStr[ index ] - otherStr[ index ];
+
+       // check for  difference between characters
+       if( diff != 0 )
+          {
+           // return  difference
+           return diff;
+          }
+
+       // increment index
+       index++;
+      }
+      //end loop
+
+      //return difference in lengths, if any
+      // function: getStringLength
+   return getStringLength( oneStr ) - getStringLength( otherStr );
+  }
 
 /*
-	Name: concatenateString
-	Process: appends one string onto another
-	Function Input/Parameters: c-style source strings (char *)
-	Function Output/Parameters: c-style destination string (char *)
-	Function Output/Returned: none
-	Device Input/Keyboard: nonr
-	Device Output/Monitor: none
-	Dependencies: getStringLength
-*/
+ Name: concatenateString
+ Process: appends one string onto another
+ Function Iutput/Parameters: c-style source strings (char *)
+ Function Output/Parameters: c-style destination string (char *)
+ Function Output/Returned: none
+ Device Input/Keyboard: none
+ Device Output/Monitor: none
+ Dependencies: getStringLength
+ */
+void concatenateString(  char *destStr, const char *sourceStr )
+  {
+   // initialize function/variables
 
-void concatenateString(char* destStr, const char* sourceStr){
-	int destStrlen = getStringLength(destStr);
-	// int destIndex = getStringLength(destStr)
-	int sourceStrlen = getStringLength(sourceStr);
- 	char* temp = (char*) malloc(sizeof(char)* (destStrlen + sourceStrlen));
-	int destStrIndex = 0;
-	int sourceStrIndex = 0;
-	int index = 0;
-	while( destStr[destStrIndex] != NULL_CHAR){
-		temp[index] = destStr[destStrIndex];
-		index++;
-		destStrIndex++;
-	}
-	while( sourceStr[sourceStrIndex] != NULL_CHAR){
-		temp[index] = sourceStr[sourceStrIndex];
-		index++;
-		sourceStrIndex++;
-	}
-	printf("Combined String is %s \n", temp);
-	copyString(destStr,temp);
-}
+      // set destination index
+         // function: getStringLength
+      int destIndex = getStringLength( destStr );
+      
+      // set source string index
+         // function: getStringLength
+      int sourceStrLen = getStringLength( sourceStr);
+      
+      //create temporary string pointer
+      char *tempStr;
+
+      // set other variables
+      int sourceIndex = 0;
+      
+      //copy source string in case of aliasing
+        //function: malloc copyString
+      tempStr = (char *)malloc( sizeof( sourceStrLen + 1));
+      copyString( tempStr, sourceStr);
+
+   // loop to end of source string
+   while( tempStr[ sourceIndex ] != NULL_CHAR && destIndex < MAX_STR_LEN )
+      {
+       // assign characters to end of destination string
+       destStr[ destIndex ] = tempStr[ sourceIndex ];
+
+       // update indices
+        destIndex++; sourceIndex++;
+        
+       // set temporary end of destination string
+       destStr[ destIndex ] = NULL_CHAR;
+      }
+      //end loop
+      
+      //release memort used for temp string
+        //function: free
+      free( tempStr);
+  }
+
 
 /*
-Name: copyString
-Process: copies one string into another.
-		 overwriting data in the destination string.
-Function Input/Parameters: c-style source string (char *)
-Function Output/Parameters: c-style destination string (char *)
-Function Output/Returned: none
-Device Input/Keyboard: none
-Device Output/Monitor: none
-Dependencies: getStringLength
-*/
+ Name: copyString
+ Process: copies one string into another,
+          overwriting data in the destination string
+ Function Iutput/Parameters: c-style source string (char *)
+ Function Output/Parameters: c-style destination sring (char *)
+ Function Output/Returned: none
+ Device Input/Keyboard: none
+ Device Output/Monitor: none
+ Dependencies: getStringLength
+ */
+void copyString( char *destStr, const char *sourceStr )
+  {
+   // initialize function/variables
+   int index = 0;
+      
+  //check for source/destination not the same(aliasing)
+      if (destStr != sourceStr)
+      {
+          //loop to end of source string
+          while( sourceStr[ index ] != NULL_CHAR && index < MAX_STR_LEN   )
+             {
+              // assign character to end of destination string
+              destStr[ index ] = sourceStr[ index ];
 
-void copyString(char* destStr, const char* sourceStr){
-	//free(destStr);
-	int sourceLength = getStringLength(sourceStr);
-	destStr = (char*) malloc(sizeof(char)*sourceLength);
-	int index = 0;
-	while (sourceStr[index] != NULL_CHAR){
+              // update index
+              index++;
 
-		destStr[index] = sourceStr[index];
-		index++;
-	}
-	//free(sourceStr);
-}
+              // set temporart end of destination string
+              destStr[ index ] = NULL_CHAR;
+             }
+          // end loop
+      }
+   
+  }
+
+
+
+
+/*
+ Name: getStringLength
+ Process: find the length of a string
+          by counting characters up to the NULL_CHAR character
+ Function Iutput/Parameters: c-style string (char *)
+ Function Output/Parameters: none
+ Function Output/Returned: length of string
+ Device Input/Keyboard: none
+ Device Output/Monitor: none
+ Dependencies: none
+ */
+int getStringLength( const char *teststr )
+  {
+   // initialize function/variables
+   int index = 0;
+
+   // loop to end of string, protect from overflow
+   while( index < STD_STR_LEN && teststr[ index ] != NULL_CHAR )
+      {
+       // update index
+       index++;
+      }
+      // end loop
+
+   // return index/length
+   return index;
+  }
+
 
 /*
 Name: findSubString
@@ -150,7 +189,6 @@ Device Input/Keyboard: none
 Device Ouotput/Monitor: none
 Dependencies: getStringLength
 */
-
 int findSubString( const char *testStr, const char *searchSubStr)
 {
 	// initialize function/variables
@@ -182,20 +220,20 @@ int findSubString( const char *testStr, const char *searchSubStr)
 					// return beginning location of sub string
 					return masterIndex;
 				}
-				// end interanl comparison loop
-
 			
 		}
-		// increment current beginning location index
-			masterIndex++;		
-
 		
 
-	}
-	// assume test have fauled at this point return SUBSTRING_NOT_FOUND;
-		return SUBSTRING_NOT_FOUND;
-
+		// increment current beginning location index
+		masterIndex++;		
+    }
+	
+    // end interanl comparison loop
+    
+    // assume test have fauled at this point return SUBSTRING_NOT_FOUND;
+    return SUBSTRING_NOT_FOUND;
 }
+
 
 /*
 Name: getStringConstrained
@@ -271,6 +309,7 @@ bool getStringConstrained(
 	//return successful operation
 	return true;
 }
+
 
 /*
 Name: getStringToDelimiter
