@@ -246,6 +246,7 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 		copyString(endStateMsg, "Configuration end line capture error");
 		// return correct file data
 		return False;
+		}
 	}
 	// assign temporary pointer to parameter return pointer
 	*configData = tempData;
@@ -265,10 +266,11 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 		Postcondition: returns code representing scheduling actions
 		Exceptions: defaults to fcfs code.
 		Notes: none
-		*/
+		*/	
 
 ConfigDataCodes getCpuSchedCode(char* codeStr)
-{       // initialize function/variables
+{       
+	// initialize function/variables
 			// set up temporary string for testing
 			// fucntion: getString Length, malloc
 		int strlen = getStringLength(codeStr);
@@ -391,7 +393,8 @@ ConfigDataCodes getLogToCode(char* logToStr)
 	return returnVal;
 }
 
-Boolean valueInRange(int lineCode, int intVal, double doubleVal, char* stringVal){
+Boolean valueInRange(int lineCode, int intVal, double doubleVal, char* stringVal)
+{
 	// initialize function/ variables.
 	Boolean result = True;
 	char* tempStr;
@@ -493,4 +496,3 @@ Boolean valueInRange(int lineCode, int intVal, double doubleVal, char* stringVal
 	return result;
 }
 
-	

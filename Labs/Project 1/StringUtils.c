@@ -49,7 +49,7 @@ int compareString(const char* oneStr, const char* otherStr){
 
 	// return differenc in lengths, if any
 	// function getStringLength
-	return getStringLength(oneStr - getStringLength(otherStr));
+	return getStringLength(oneStr) - getStringLength(otherStr);
 }
 /*
 Name: getStringLength
@@ -95,25 +95,42 @@ int max_length(const char* OneStr, const char* OtherStr){
 */
 
 void concatenateString(char* destStr, const char* sourceStr){
-	int destStrlen = getStringLength(destStr);
-	// int destIndex = getStringLength(destStr)
-	int sourceStrlen = getStringLength(sourceStr);
- 	char* temp = (char*) malloc(sizeof(char)* (destStrlen + sourceStrlen));
-	int destStrIndex = 0;
-	int sourceStrIndex = 0;
-	int index = 0;
-	while( destStr[destStrIndex] != NULL_CHAR){
-		temp[index] = destStr[destStrIndex];
-		index++;
-		destStrIndex++;
+	// intialize function/ variables
+
+	// set destination index
+	// function: getStringLength
+	int destIndex = getStringLength(destStr);
+
+	// set source string index
+	// function: getStringLength
+	int sourceStrLen = getStringLength(sourceStr);
+
+	// create temorary string pointer
+	char *tempStr;
+
+	// set other variables
+	int sourceIndex = 0;
+
+	// copy source string in case of aliasing
+	// function: malloc copyString
+	tempStr = (char *)malloc(sizeof(sourceStrLen + 1));
+	copyString(tempStr,sourceStr);
+
+	// loop to end of source string
+	while(tempStr[sourceIndex] != NULL_CHAR && destIndex < MAX_STR_LEN){
+		// assign characters to end of destination string
+		destStr[destIndex] = tempStr[sourceIndex];
+
+		// update indices
+		destIndex++; sourceIndex++;
+
+		// set temprorary end of destination string
+		destStr[destIndex] = NULL_CHAR;
 	}
-	while( sourceStr[sourceStrIndex] != NULL_CHAR){
-		temp[index] = sourceStr[sourceStrIndex];
-		index++;
-		sourceStrIndex++;
-	}
-	printf("Combined String is %s \n", temp);
-	copyString(destStr,temp);
+	// end loop
+	// release memory used for temp string
+	// function: free
+	free(tempStr);
 }
 
 /*

@@ -166,7 +166,7 @@ int main(int argc, char** argv){
 
 		// show error message, end program
 		// function: printf
-		printf("\nConfig Upload Error: No, program aborted\n\n", errorMessage);
+		printf("\nConfig Upload Error: No, program aborted %s \n\n", errorMessage);
 
 		// unset program run Flag
 		programRunFlag = False;
@@ -205,7 +205,7 @@ int main(int argc, char** argv){
 
 		// show errormessage
 		// function: printf
-		printf("\nMetadata Upload Error: No, program aborted\n", errorMessage);
+		printf("\nMetadata Upload Error: No, program aborted %s\n", errorMessage);
 
 	}
 
