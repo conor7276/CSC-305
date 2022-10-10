@@ -3,7 +3,7 @@
 #include "metadataops.h"
 #include "configops.h"
 #include "runSim.h"
-
+#include "StringUtils.h"
 extern const int STR_EQ;
 
 void showProgramFormat();
