@@ -1,6 +1,6 @@
 // header file
 #include "configops.h"
-#include "StringUtils.h"
+
 
 /*
 Function Name: clearConfigData
@@ -67,7 +67,7 @@ void displayConfigData(ConfigDataType* configData) {
 	printf("Program file name : %s\n", configData->metaDataFileName);
 	configCodeToString(configData->cpuSchedCode, displayString);
 	printf("CPU schedule selecetion: %s\n", displayString);
-	printf("Quantum tim       : %d\n", configData->quantumCycles);
+	printf("Quantum time       : %d\n", configData->quantumCycles);
 	printf("Memory Available  : %d\n", configData->memAvailable);
 	printf("Process cycle rate: %d\n", configData->procCycleRate);
 	printf("I/O cycle rate    : %d\n", configData->ioCycleRate);
@@ -113,6 +113,7 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 	
 	copyString(endStateMsg, "Configuration file upload successful");
 
+	// initalize config data pointer in case of return error
 	*configData = NULL;
 
 	//open file 
@@ -121,7 +122,8 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 
 	//check for file open failure
 
-	if (fileAccessPtr == NULL) {
+	if (fileAccessPtr == NULL)
+	{
 	  //set end state message to config file access error
       //function: copyString
 		copyString(endStateMsg, "Configuration file access error");
@@ -133,7 +135,8 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 	//function: getLineTo
 
 	if (getLineTo(fileAccessPtr, MAX_STR_LEN, COLON, dataBuffer, IGNORE_LEADING_WS, dontStopAtNonPrintable) != NO_ERR
-		|| compareString(dataBuffer, "Start Simulator Configuration File") != STR_EQ) {
+		|| compareString(dataBuffer, "Start Simulator Configuration File") != STR_EQ)
+	{
 	 //close file access
 		//function: fclsoe
 		fclose(fileAccessPtr);
@@ -150,30 +153,57 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 
 	tempData = (ConfigDataType*)malloc(sizeof(ConfigDataType));
 
-	while (lineCtr < NUM_DATA_LINES) {
-		if (getLineTo(fileAccessPtr, MAX_STR_LEN, COLON, dataBuffer, IGNORE_LEADING_WS, dontStopAtNonPrintable) != NO_ERR) {
+	while (lineCtr < NUM_DATA_LINES)
+	{ 
+		// get line leader, check for failure
+		// function: getLineTo
+
+		if (getLineTo(fileAccessPtr, MAX_STR_LEN, COLON, dataBuffer, IGNORE_LEADING_WS, dontStopAtNonPrintable) != NO_ERR) 
+		{
+			// free temp struct memory
+			// function: free
 			free(tempData);
+
+			// close file access
+			// function: fclose
 			fclose(fileAccessPtr);
+
+			// set end state message to line capture failure
+			// function: copyString
 			copyString(endStateMsg, "Configuration start line capture error");
+
+			// return incomplete file error
 			return False;
 		}
-	
-		dataLineCode = getDataLineCode(dataBuffer);
 
+		// find correct data line by number
+		// function: getDataLineCode
+		dataLineCode = getDataLineCode(dataBuffer);
+		
+		// check for data line found
 		if (dataLineCode != CFG_CORRUPT_PROMT_ERR) {
 			//get data value
 			//check for cersion number (double value)
 			if (dataLineCode == CFG_VERSION_CODE) {
+				// get version number
+				// function: fscanf
 				fscanf(fileAccessPtr, "%lf", &doubleData);
 			}
+			// otherwise, check for metaData or LogTo file names
+			// or CPU scheduling names (strings)
 			else if (dataLineCode == CFG_MD_FILE_NAME_CODE ||
 				dataLineCode == CFG_LOG_FILE_NAME_CODE ||
 				dataLineCode == CFG_CPU_SCHED_CODE ||
 				dataLineCode == CFG_LOG_TO_CODE)
 			{
-				fscanf(fileAccessPtr, "%d", &intData);
+				fscanf(fileAccessPtr, "%s", dataBuffer);
 			}
-
+			else // otherwise assume integer data
+			{
+				// get integer input
+				// function: fscanf
+				fscanf(fileAccessPtr,"%d",&intData);
+			}
 			if (valueInRange(dataLineCode, intData, doubleData, dataBuffer) == True) {
 				//assign to data pointer depending on config claue
 				//function: getCpuSchedCode, getLogToCode
@@ -182,7 +212,7 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 					tempData->version = doubleData;
 					break;
 				case CFG_MD_FILE_NAME_CODE:
-					copyString(tempData->metaDataFileName, (dataBuffer));
+					copyString(tempData->metaDataFileName, dataBuffer);
 					break;
 				case CFG_CPU_SCHED_CODE:
 					tempData->cpuSchedCode = getCpuSchedCode(dataBuffer);
@@ -209,7 +239,8 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 				}
 
 			}
-			else {
+			else
+			{
 			//free temp struct memory
 				//function : free
 				free(tempData);
@@ -224,30 +255,49 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 				//Return data out of range LINE 309
 				return False;
 			}
-			// increment line counter
-			lineCtr++;
-		}
-		// end master loop.
-		// acquire end of sim config string
-		// function: getLineTo
-		if (getLineTo(fileAccessPtr, MAX_STR_LEN, PERIOD,
-			dataBuffer, IGNORE_LEADING_WS, dontStopAtNonPrintable) != NO_ERR
-			|| compareString(dataBuffer, "End Simulator Configuration File")
-			!= STR_EQ){
 			
-				// Free temp struct memory
-				// function: free
-				free(tempData);
-		// Close file access.
-		// function: fclose
-		fclose(fileAccessPtr);
-		// set end state message to corrupt configuration end line
-		// function: copyString
-		copyString(endStateMsg, "Configuration end line capture error");
-		// return correct file data
-		return False;
 		}
+		// adding
+		else{
+			// free temp struct memory
+			// function: free
+			free(tempData);
+			// close file access
+			// function: fclose
+			fclose(fileAccessPtr);
+
+			// set end state message to configuration corrupt prompt error
+			// function: copyString
+			copyString(endStateMsg, "Corrupted congiuration prompt");
+
+			// return corrupt config file name
+			return False;
+		}
+		// increment line counter
+		lineCtr++;
 	}
+	// end master loop.
+	// acquire end of sim config string
+	// function: getLineTo
+	if (getLineTo(fileAccessPtr, MAX_STR_LEN, PERIOD,
+		dataBuffer, IGNORE_LEADING_WS, dontStopAtNonPrintable) != NO_ERR
+		|| compareString(dataBuffer, "End Simulator Configuration File")
+		!= STR_EQ)
+	{
+		
+	// Free temp struct memory
+	// function: free
+	free(tempData);
+	// Close file access.
+	// function: fclose
+	fclose(fileAccessPtr);
+	// set end state message to corrupt configuration end line
+	// function: copyString
+	copyString(endStateMsg, "Configuration end line capture error");
+	// return correct file data
+	return False;
+	}
+	
 	// assign temporary pointer to parameter return pointer
 	*configData = tempData;
 	// close file access.
@@ -257,16 +307,16 @@ Boolean getConfigData(char* fileName, ConfigDataType** configData, char* endStat
 	return True;
 }
 	
-		/*
-		Function Name: getCpuSchedCode
-		Algorithm: converts string data (e.g., "SJF-N ", "SRTF-P")
-		to constant code number to be stored as integer
-		Precondition: codeStr is a C-Style string with one.
-		of the specified cpu scheduling operations
-		Postcondition: returns code representing scheduling actions
-		Exceptions: defaults to fcfs code.
-		Notes: none
-		*/	
+/*
+Function Name: getCpuSchedCode
+Algorithm: converts string data (e.g., "SJF-N ", "SRTF-P")
+to constant code number to be stored as integer
+Precondition: codeStr is a C-Style string with one.
+of the specified cpu scheduling operations
+Postcondition: returns code representing scheduling actions
+Exceptions: defaults to fcfs code.
+Notes: none
+*/	
 
 ConfigDataCodes getCpuSchedCode(char* codeStr)
 {       

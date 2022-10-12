@@ -181,7 +181,8 @@ int findSubString( const char *testStr, const char *searchSubStr)
 	// initialize other variables
 	int searchIndex, internalIndex;
 	// loop across test string
-	while( masterIndex < testStrLen){
+	while( masterIndex < testStrLen)
+	{
 		//set internal loop index to current test string index
 		internalIndex = masterIndex;
 		// set internal search index to zero
@@ -200,17 +201,13 @@ int findSubString( const char *testStr, const char *searchSubStr)
 					return masterIndex;
 				}
 				// end interanl comparison loop
-
 			
 		}
 		// increment current beginning location index
-			masterIndex++;		
-
-		
-
+			masterIndex++;	
 	}
-	// assume test have fauled at this point return SUBSTRING_NOT_FOUND;
-		return SUBSTRING_NOT_FOUND;
+	// assume test have failed at this point return SUBSTRING_NOT_FOUND;
+return SUBSTRING_NOT_FOUND;
 
 }
 
@@ -228,7 +225,7 @@ Dependencies: fgetc
 */
 
 bool getStringConstrained(
-						FILE *instream,
+						FILE *inStream,
 						bool clearLeadingNonPrintable,
 						bool clearLeadingSpace,
 						bool stopAtNonPrintable,
@@ -240,14 +237,15 @@ bool getStringConstrained(
 	capturedString[index] = NULL_CHAR;
 	// caputer first value ins tream
 	// function: fgetc
-	intChar = fgetc(instream);
+	intChar = fgetc(inStream);
 
 	// loop to clear non printable or space, if indicated
-	while (((intChar != EOF) && ((clearLeadingNonPrintable && intChar == (int)SPACE))) || (clearLeadingSpace && intChar == (int)SPACE))
+	while ((intChar != EOF) && ((clearLeadingNonPrintable && intChar == (int)SPACE))
+				|| (clearLeadingSpace && intChar == (int)SPACE))
 	{
 		// get next character
 		// function: fgetc
-		intChar = fgetc(instream);
+		intChar = fgetc(inStream);
 	}
 	if(intChar == EOF)
 	{
@@ -278,11 +276,11 @@ bool getStringConstrained(
 	index++;
 
 	// set next element to null character / end of c-string
-	capturedString[index] == NULL_CHAR;
+	capturedString[index] = NULL_CHAR;
 
 	// get next character as integer
 	// function :fgetc
-	intChar = fgetc(instream);
+	intChar = fgetc(inStream);
 	}
 	//end loop
 	//return successful operation
@@ -437,7 +435,7 @@ void setStrToLowerCase( char *destStr, const char *sourceStr)
 		index++;
 
 		// set temporary end of destination string
-		destStr[index] == NULL_CHAR;
+		destStr[index] = NULL_CHAR;
 	}
 
 	//release memory used for temp string
@@ -461,7 +459,7 @@ char toLowerCase(char testChar)
 	if( testChar >= 'A' && testChar <= 'Z')
 	{
 		//return lower case letter
-		testChar == testChar - 'A' + 'a';
+		testChar = testChar - 'A' + 'a';
 	}
 	// otherwise, assume no uppercase letter,
 	// return character unchanged

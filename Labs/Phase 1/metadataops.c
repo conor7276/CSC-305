@@ -213,6 +213,7 @@ Boolean getMetaData(char* filename, OpCodeType **opCodeDataHead, char *endStateM
 
     // open file for reading
     // function: fopen
+    // printf("Filename in function: %s\n", filename);
     fileAccessPtr = fopen(filename, READ_ONLY_FLAG);
 
     // check for file open failure
@@ -228,7 +229,8 @@ Boolean getMetaData(char* filename, OpCodeType **opCodeDataHead, char *endStateM
 
     // check first line for correct leader
     // function: getLineTo, compareString
-    if(getLineTo(fileAccessPtr,MAX_STR_LEN,COLON,dataBuffer,ignoreLeadingWhiteSpace, stopAtNonPrintable) != NO_ERR || compareString(dataBuffer, "Start Program Meta-Data Code") != STR_EQ){
+    if(getLineTo(fileAccessPtr,MAX_STR_LEN,COLON,dataBuffer,ignoreLeadingWhiteSpace, stopAtNonPrintable) != NO_ERR
+     || compareString(dataBuffer, "Start Program Meta-Data Code") != STR_EQ){
 
         // close file
         // function: fclose
@@ -291,7 +293,7 @@ Boolean getMetaData(char* filename, OpCodeType **opCodeDataHead, char *endStateM
         accessResult = getOpCommand(fileAccessPtr, newNodePtr);
 
         // update start and end counts for later comparison
-        // functionL updateStartCount, updateEndCount
+        // function: updateStartCount, updateEndCount
         startCount = updateStartCount(startCount, newNodePtr->strArg1);
         endCount = updateEndCount(endCount,newNodePtr->strArg1);
     }
@@ -313,7 +315,8 @@ Boolean getMetaData(char* filename, OpCodeType **opCodeDataHead, char *endStateM
 
             // check last line for incorrect end descriptor
             // functionL getLineTo, compareString
-            if(getLineTo(fileAccessPtr,MAX_STR_LEN,PERIOD,dataBuffer,ignoreLeadingWhiteSpace, stopAtNonPrintable) != NO_ERR || compareString(dataBuffer, "End Program Meta-Data Code") != STR_EQ){
+            if(getLineTo(fileAccessPtr,MAX_STR_LEN,PERIOD,dataBuffer,ignoreLeadingWhiteSpace, stopAtNonPrintable) != NO_ERR
+             || compareString(dataBuffer, "End Program Meta-Data Code") != STR_EQ){
 
                 // set access result to corrupteed descriptor error
                 accessResult = MD_CORRUPT_DESCRIPTOR_ERR;
@@ -393,7 +396,7 @@ int getOpCommand(FILE *filePtr, OpCodeType *inData){
     // get whole op command as a string
     // fucntion: getLineTo
     accessResult = getLineTo(filePtr, STD_STR_LEN, SEMICOLON, strBuffer, IGNORE_LEADING_WS, stopAtNonPrintable);
-
+    
     // check for successful access
     if(accessResult == NO_ERR){
 
@@ -413,16 +416,16 @@ int getOpCommand(FILE *filePtr, OpCodeType *inData){
         // return op command access failure
         return OPCMD_ACCESS_ERR;
     }
-
+    
     // verify op command
-    // functionL verifyValidCommand
+    // function: verifyValidCommand
     if(verifyValidCommand(cmdBuffer) == False){
 
         // return op command error
         return CORRUPT_OPCMD_ERR;
     }
 
-
+    
     // set all struct values that may not be initialized to defaults
     inData->pid = 0;
     inData->inOutArg[0] = NULL_CHAR;
@@ -453,7 +456,7 @@ int getOpCommand(FILE *filePtr, OpCodeType *inData){
             return CORRUPT_OPCMD_ARG_ERR;
         }
     }
-
+    
     // get first string arg
     // function: getStringArg
     runningStringIndex = getStringArg(argStrBuffer, strBuffer, runningStringIndex);
@@ -465,11 +468,11 @@ int getOpCommand(FILE *filePtr, OpCodeType *inData){
     // check for legitimate first string arg
     // funcrion: verifyFirstStringArg
     if(verifyFirstStringArg(argStrBuffer) == False){
-
+        
         // return argument errorMessage
         return CORRUPT_OPCMD_ARG_ERR;
     }
-
+    
     // check for last op command found
     // function: compareString
     if(compareString(inData->command,"sys") == STR_EQ && compareString(inData->strArg1,"end") == STR_EQ){
@@ -477,7 +480,7 @@ int getOpCommand(FILE *filePtr, OpCodeType *inData){
         // return last op command found
         return LAST_OPCMD_FOUND_MSG;
     }
-
+    
     // check for app start seconds argument
     // function: compareString
     if(compareString(inData->command,"app") == STR_EQ && compareString(inData->strArg1,"start") == STR_EQ){
@@ -561,14 +564,14 @@ int getOpCommand(FILE *filePtr, OpCodeType *inData){
         // set second int argument to number
         inData->intArg3 = numBuffer;
     }
-
+    
     // check int args for upload failure
     if(arg2FailureFlag == True || arg3FailureFlag == True){
 
         // return argument error
         return CORRUPT_OPCMD_ARG_ERR;
     }
-
+    
     // return complete op command found message
     return COMPLETE_OPCMD_FOUND_MSG;
 }
@@ -747,7 +750,7 @@ Exceptions: none
 Notes: none
 */
 Boolean verifyFirstStringArg(char *strArg){
-
+    
     // check for all possible string arg 1 possibilities
     // function: comapreString
     if(compareString(strArg,"access") == STR_EQ
@@ -761,6 +764,7 @@ Boolean verifyFirstStringArg(char *strArg){
         || compareString(strArg,"process") == STR_EQ
         || compareString(strArg,"serial") == STR_EQ
         || compareString(strArg, "sound signal") == STR_EQ
+        || compareString(strArg, "start") == STR_EQ
         || compareString(strArg,"usb") == STR_EQ
         || compareString(strArg,"video signal") == STR_EQ)
     {

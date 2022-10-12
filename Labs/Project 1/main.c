@@ -60,7 +60,7 @@ int main(int argc, char** argv){
 	}
 		// initialize file name to empty
 		fileName[0] = NULL_CHAR;
-		
+		printf("RAHHHHHHHHHHH\n");
 	
 	// loop acorss args (starting at 1) and program runflag
 	while( programRunFlag == False && argIndex < argc){
