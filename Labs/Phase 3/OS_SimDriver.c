@@ -8,6 +8,7 @@
 
 
 extern const int STR_EQ;
+
 void showProgramFormat();
 
 int main(int argc, char** argv) {

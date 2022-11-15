@@ -365,6 +365,17 @@ ConfigDataCodes getCpuSchedCode(char* codeStr)
 		return returnVal;
 }
 
+/*
+Function Name: getDataLineCode
+Algorithm: test string for one of known leaer strings, returns line number
+		if string is correct, returns CFG_CORRUPT_DATA_ERR
+		if string is not found
+Precondition: dataBuffer is valid C-style string
+Postcondition: returns line number of data item in terms of constant
+				(eg., CFG_VERSION_CODE, CFG_CPU_SCHED_CODE, etc.)
+Exceptions: returns CFG_CORRUPT_FILE_ERR if string is not identified
+Notes: None
+*/
 
 int getDataLineCode(char* dataBuffer)
 {
@@ -410,6 +421,15 @@ int getDataLineCode(char* dataBuffer)
 			return CFG_CORRUPT_PROMT_ERR;
 }
 
+/*
+Function Name: getLogToCode
+Algorithm: converts string data (e.g., "File", "monitor")
+			to constant code number to be sotred as integer
+Precondition: codeStr is a C-Style string with one of the specified log to operations
+Postcondition: returns code representing log to actions
+Notes: none
+*/
+
 ConfigDataCodes getLogToCode(char* logToStr)
 {
 	// initialize function/variables.
@@ -442,6 +462,18 @@ ConfigDataCodes getLogToCode(char* logToStr)
 	// return found code
 	return returnVal;
 }
+
+/*
+Function: valueInRange
+Algorithm: tests one of three values(int, double, string) for being
+			in specified range, depending on data code
+			(i.e., specified config value)
+Precondition: one of the three data values is valid
+Postcondiiton: returns True if data is within specified parameters.
+				false otherwise.
+Exceptions: metaData or logfile names are ignored and return True.
+Notes: none
+*/
 
 Boolean valueInRange(int lineCode, int intVal, double doubleVal, char* stringVal)
 {

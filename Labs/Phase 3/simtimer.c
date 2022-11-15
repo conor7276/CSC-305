@@ -1,3 +1,21 @@
+// Program Information ///////////////////////////////
+/**
+ * @file SimpleTimer.c
+ * 
+ * @brief Implementation file for using a timer with micro-second precision
+ * 
+ * @author Micheal Leverington
+ * 
+ * @details implements member for timing
+ * 
+ * @version 3.00 (02 Feburary 20117) Update to simulator timer
+ * 			2.00 (13 January 2017) Update to C language
+ * 			1.00 (11 September 2015)
+ * 
+ * @Note Requires SimTimer.h
+ * 
+ */
+
 // Precompiler directives ////.
 #ifndef SIMTIMER_C
 #define SIMTIMER_C
@@ -7,7 +25,8 @@
 #include "simtimer.h"
 
 // Constants ///////
-const char RADIX_POINT = ' ';
+
+const char RADIX_POINT = '.';
 
 void runTimer(int milliSeconds) {
 	struct timeval startTime, endTime;
@@ -64,21 +83,21 @@ double accessTimer(int controlCode, char* timeStr) {
 			fpTime = 0.000000000;
 		}
 		break;
-		case STOP_TIMER : 
-			if (running == True) {
-				gettimeofday(&endData, NULL);
-				running = False;
-				endSec = endData.tv_sec;
-				endUSec = endData.tv_usec;
-				fpTime = processTime(startSec, endSec, startUSec, endUSec, timeStr);
-			}
-	// assume timer not running
-else {
-fpTime = 0.000000000;
-}
-break;
-}
-return fpTime;
+	case STOP_TIMER : 
+		if (running == True) {
+			gettimeofday(&endData, NULL);
+			running = False;
+			endSec = endData.tv_sec;
+			endUSec = endData.tv_usec;
+			fpTime = processTime(startSec, endSec, startUSec, endUSec, timeStr);
+		}
+		// assume timer not running
+		else {
+			fpTime = 0.000000000;
+		}
+		break;
+	}
+	return fpTime;
 }
 
 double processTime(double startSec, double endSec, double startUSec, double endUSec, char* timeStr) {
