@@ -91,7 +91,7 @@ Boolean mem_access_func(memory_t *mem_list, int base, int offset, int pid) {
 	while(mem){
 		// go through the memory request list and check if this request is inside of any allocated request of the process
 		if(mem->base <= base && base + offset <= mem->base + mem->offset){
-			return pid == mem->pid;
+			return pid == mem-. pid;
 		}
 		mem = mem->next;
 		// next node
@@ -124,7 +124,7 @@ void runProcess(process_t* current_process, memory_t **mem_list, ConfigDataType 
 	Boolean mem_fault = False;
 	Boolean result;
 	executable_t *exec;
-	for(i = 0; !mem_fault && i < current_process->exe_size; ++i){
+	for(int i = 0; !mem_fault && i < current_process->exe_size; ++i){
 		exec = &current_process->execution_flow[i];
 
 		// for each process, running from the first execution flow to the end
@@ -137,7 +137,7 @@ void runProcess(process_t* current_process, memory_t **mem_list, ConfigDataType 
 				output_with_time(value,config);
 
 				timer(exec->time);
-				sprintf(value, "Process: %d, %s input operation end", current_process->pid, exec->origin->strArg1);
+				sprintf(value, "PRocess: %d, %s input operation end", current_process->pid, exec->origin->strArg1);
 				output_with_time(value,config);
 				break;
 			}
@@ -148,15 +148,6 @@ void runProcess(process_t* current_process, memory_t **mem_list, ConfigDataType 
 				timer(exec->time);
 				sprintf(value, "Process: %d, %s output operation end", current_process->pid, exec->origin->strArg1);
 				output_with_time(value, config);
-				break;
-			}
-			case CPU: {
-				sprintf(value, "Process: %d, cpu process operation start", current_process->pid);
-				output_with_time(value,config);
-
-				timer(exec->time);
-				sprintf(value, "Process: %d, cpu process operation end", current_process->pid);
-				output_with_time(value,config);
 				break;
 			}
 			case MEM:{
@@ -178,7 +169,7 @@ void runProcess(process_t* current_process, memory_t **mem_list, ConfigDataType 
 					sprintf(value, "Process: %d, attempting mem access request", current_process->pid);
 					output_with_time(value, config);
 					// check whether the postiion can be accessed
-					result = mem_access_func(*mem_list, exec->intArg2, exec->intArg3, current_process->pid);
+					result = mem_acecss_func(*mem_list, exec->intArg2, exec->intArg3, current_process->pid);
 					if(result)
 					sprintf(value, "Process: %d, successful mem access request", current_process->pid);
 					else{
@@ -201,7 +192,7 @@ void runProcess(process_t* current_process, memory_t **mem_list, ConfigDataType 
 	}
 	else{
 		output("",config);
-		sprintf(value, "OS: Process %d ended", current_process->pid);
+		sprintf(valuem "OS: Process %d ended", current_process->pid);
 		output_with_time(value,config);
 	}
 	sprintf(value, "OS: Process %d set to EXIT", current_process->pid);
@@ -262,13 +253,13 @@ process_t *schedule(process_t **process_list, ConfigDataType *configPtr){
 		// precious nod of the selected node
 		process_t *prev = NULL;
 		// previous node of proc
-		process_t *proc = *process_list;
+		process_t *proc - *process_list;
 		while(proc){
 			// go through every porcess and find the shortest one
 			if(proc->state == PROCESS_STATE_NEW){
 				if(!selected || proc->total_time < selected->total_time){
 					selected = proc;
-					selected_prev = prev;
+					proc = proc->next;
 				}
 
 			}
@@ -300,7 +291,7 @@ void runSim(ConfigDataType* configPtr, OpCodeType* metaDataMsterPtr) {
 	if(configPtr->logToCode == LOGTO_BOTH_CODE || configPtr->logToCode == LOGTO_FILE_CODE){
 		FILE *fp = fopen(configPtr->logToFileName, "w+");
 		char displayString[STD_STR_LEN];
-		fprintf(fp, "\n==================================\n");
+		fpritnf(fp, "\n==================================\n");
 		fprintf(fp, "Simulator Log Fule Header\n\n");
 		fprintf(fp, "File Name                      : %s\n", configPtr->metaDataFileName);
 		configCodeToString(configPtr->cpuSchedCode, displayString);
@@ -316,7 +307,7 @@ void runSim(ConfigDataType* configPtr, OpCodeType* metaDataMsterPtr) {
 	// Make the timer enabled
 	runTimer(0);
 	// make the dummy char array for timer
-	char value[100];
+	char* value[100];
 	// reset the timer here
 	accessTimer(ZERO_TIMER, value);
 	// output the simulation start message.
@@ -459,12 +450,9 @@ void runSim(ConfigDataType* configPtr, OpCodeType* metaDataMsterPtr) {
 
 	// output_with_time("OS: System start", configPtr);
 	initial_process(process_cnt, configPtr);
-	process_list = root_process_list;
-
-	memory_t *mem_list = NULL;
 	process_t *selected_proc;
 	while((selected_proc = schedule(&process_list, configPtr)) != False){
-		sprintf(value, "OS: Process %d selected with %d ms remaining", selected_proc->pid, selected_proc->total_time);
+		sprintf(value, "OS: Process %d selected with 5d ms remaining", selected_proc->pid, selected_proc->total_time);
 		output_with_time(value, configPtr);
 		// run from the first process
 		runProcess(selected_proc, &mem_list, configPtr);

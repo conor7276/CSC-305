@@ -1,6 +1,66 @@
-[  0 000001] OS: Simulation Start
- [  0 000001] OS: Simulation Start
- [  0 000001] OS: Simulation Start
- [  0 000001] OS: Simulation Start
- [  0 000001] OS: Simulation Start
- 
+
+==================================
+Simulator Log Fule Header
+
+File Name                      : metadata1.mdf
+CPU Scheduling                  : FCFS-N
+Quantnum Cycles                 : 3
+MemoryAvailable(KB)             : 11100
+Processor Cycle Rate (ms/cycle) : 10
+I/O Cycle Rate (ms/cycle)       : 20
+Begin Simulation
+
+  0.000001, OS: Simulation Start
+OS: Process 0 set to READY state from NEW state.
+  0.011191, OS: Process 0 selected with 11361 ms remaining
+  0.018239, OS: Process 0 set from READY to RUNNING
+
+  0.029505, Process: 0, video signal input operation start
+  1.299582, Process: 0, video signal input operation end
+  1.306100, Process: 0, cpu process operation start
+  1.329978, Process: 0, cpu process operation end
+  1.335632, Process: 0, video signal output opertation start
+  2.745442, Process: 0, video signal output operation end
+  2.752558, Process: 0, sound signal output opertation start
+  3.660886, Process: 0, sound signal output operation end
+  3.668013, Process: 0, hard drive output opertation start
+  4.216188, Process: 0, hard drive output operation end
+  4.223387, Process: 0, hard drive output opertation start
+  4.591339, Process: 0, hard drive output operation end
+  4.598397, Process: 0, hard drive input operation start
+  5.026360, Process: 0, hard drive input operation end
+  5.032942, Process: 0, keyboard input operation start
+  6.641056, Process: 0, keyboard input operation end
+  6.647750, Process: 0, hard drive output opertation start
+  7.077035, Process: 0, hard drive output operation end
+  7.084088, Process: 0, usb input operation start
+  7.371790, Process: 0, usb input operation end
+  7.377945, Process: 0, sound signal input operation start
+  7.887297, Process: 0, sound signal input operation end
+  7.894464, Process: 0, usb input operation start
+  8.301853, Process: 0, usb input operation end
+  8.307338, Process: 0, cpu process operation start
+  8.355010, Process: 0, cpu process operation end
+  8.361242, Process: 0, serial output opertation start
+  8.853652, Process: 0, serial output operation end
+  8.860065, Process: 0, video signal output opertation start
+ 10.269535, Process: 0, video signal output operation end
+ 10.276687, Process: 0, hard drive output opertation start
+ 10.645251, Process: 0, hard drive output operation end
+ 10.652051, Process: 0, hard drive input operation start
+ 11.260701, Process: 0, hard drive input operation end
+ 11.267612, Process: 0, hard drive input operation start
+ 11.636368, Process: 0, hard drive input operation end
+ 11.643330, Process: 0, cpu process operation start
+ 11.670433, Process: 0, cpu process operation end
+ 11.677033, Process: 0, cpu process operation start
+ 11.703178, Process: 0, cpu process operation end
+
+ 11.713291, OS: Process 0 ended
+ 11.727014, OS: Process 0 set to EXIT
+ 11.737540, OS: System stop
+ 11.744628, OS: Simulation end
+
+End Simulation - Complete
+===========================
+

@@ -1,7 +1,6 @@
 // header files
 #include "StringUtils.h"
-#include "configops.h"
-#include "simtimer.h"
+
 // constant declaration
 const char NULL_CHAR = '\0';
 const char SPACE = ' ';
@@ -673,7 +672,7 @@ void output(char *message, ConfigDataType *configPtr){
       FILE *fp = fopen(configPtr->logToFileName,"a+");
       fprintf(fp, "%s\n", message);
       fclose(fp);
-      printf("%s\n", message);
+      pritnf("%s\n", message);
    }
 
    // if screen only, then write to screen
@@ -691,8 +690,8 @@ Exceptions: none
 Notes: none
 */
 void output_with_time(char* message, ConfigDataType *configPtr){
-   char value[100], buf[200];
+   char* value[100], buf[200];
    accessTimer(LAP_TIMER, value);
-   sprintf(buf, " %s, %s", value, message);
+   sprintf(buf, "%s, %s", value, message);
    output(buf, configPtr);
 }
