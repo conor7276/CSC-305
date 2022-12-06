@@ -1,7 +1,7 @@
 Start Simulator Configuration File:
 Version/Phase: 1.05
-File Path: metadata1.mdf
-CPU Scheduling Code: FCFS-N
+File Path: metadata4.mdf
+CPU Scheduling Code: FCFS-P
 Quantum Time (cycles): 3
 Memory Available (KB): 11100
 Processor Cycle Time (msec): 10

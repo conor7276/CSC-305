@@ -32,7 +32,6 @@ void runTimer(int milliSeconds) {
 	struct timeval startTime, endTime;
 	int startSec, startUSec, endSec, endUSec;
 	int uSecDiff, mSecDiff, secDiff, timeDiff;
-	
 	gettimeofday(&startTime, NULL);
 	startSec = startTime.tv_sec;
 	startUSec = startTime.tv_usec;
